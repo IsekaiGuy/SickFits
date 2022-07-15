@@ -23,16 +23,18 @@ export default function Pagination({ page }) {
   return (
     <PaginationStyles>
       <Head>
-        <title>Sick Fits - Page {page} of ___</title>
+        <title>
+          Sick Fits - Page {page} of {pageCount}
+        </title>
       </Head>
-      <Link href={`/products/${page - 1}`}>
+      <Link href={`/products/${+page - 1}`}>
         <a aria-disabled={page <= 1}>{'< Prev'}</a>
       </Link>
       <p>
         Page {page} of {pageCount}
       </p>
       <p>{count} Items total</p>
-      <Link href={`/products/${page - 1}`}>
+      <Link href={`/products/${+page + 1}`}>
         <a aria-disabled={page >= pageCount}>{'Next >'}</a>
       </Link>
     </PaginationStyles>
