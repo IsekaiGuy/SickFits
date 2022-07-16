@@ -26,7 +26,9 @@ const { withAuth } = createAuth({
     fields: ['name', 'email', 'password'],
   },
   passwordResetLink: {
-    async sendToken(args) {},
+    async sendToken(args) {
+      console.log(args);
+    },
   },
 });
 
