@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import Head from 'next/head';
 import styled from 'styled-components';
 import DisplayError from './ErrorMessage';
+import formatMoney from '../lib/formatMoney';
 
 const SINGLE_ITEM_QUERY = gql`
   query SINGLE_ITEM_QUERY($id: ID!) {
@@ -38,6 +39,7 @@ export default function SingleProduct({ id }) {
       <img src={product.photo.image.publicUrlTransformed} alt={product.name} />
       <div className="details">
         <h2>{product.name}</h2>
+        <p>Price: {formatMoney(product.price)}</p>
         <p>{product.description}</p>
       </div>
     </ProductStyles>
