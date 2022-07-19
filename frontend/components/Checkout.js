@@ -8,7 +8,23 @@ import {
 } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 import NProgress from 'nprogress/nprogress';
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/client';
 import SickButton from './styles/SickButton';
+
+const CREATE_ORDER_MUTATION = gql`
+  mutation CREATE_ORDER_MUTATION($token: String!) {
+    checkout(token: $token) {
+      id
+      charge
+      total
+      items {
+        id
+        name
+      }
+    }
+  }
+`;
 
 const stripeLib = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
 
@@ -17,6 +33,9 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
+  const [checkout, { error: graphqlError }] = useMutation(
+    CREATE_ORDER_MUTATION
+  );
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -30,8 +49,15 @@ function CheckoutForm() {
 
     if (error) {
       setError(error);
-      setLoading(false);
+      NProgress.done();
+      return;
     }
+
+    const order = await checkout({
+      variables: {
+        token: paymentMethod.id,
+      },
+    });
 
     setLoading(false);
     NProgress.done();
@@ -40,6 +66,7 @@ function CheckoutForm() {
   return (
     <CheckoutFormStyles onSubmit={handleSubmit}>
       {error && <p style={{ fontSize: 12 }}>{error.message}</p>}
+      {graphqlError && <p style={{ fontSize: 12 }}>{graphqlError.message}</p>}
       <CardElement />
       <SickButton>Checkout Now</SickButton>
     </CheckoutFormStyles>
