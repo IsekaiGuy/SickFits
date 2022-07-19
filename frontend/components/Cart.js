@@ -7,6 +7,7 @@ import calcTotalPrice from '../lib/calcTotalPrice';
 import { useCart } from '../lib/cartState';
 import CloseButton from './styles/CloseButton';
 import RemoveFromCart from './RemoveFromCart';
+import Checkout from './Checkout';
 
 function CartItem({ cartItem }) {
   const { product } = cartItem;
@@ -46,6 +47,7 @@ export default function Cart() {
       </ul>
       <footer>
         <p>{formatMoney(calcTotalPrice(me.cart))}</p>
+        <Checkout />
       </footer>
     </CartStyles>
   );
